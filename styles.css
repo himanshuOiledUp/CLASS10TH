@@ -1,0 +1,525 @@
+:root{
+  --bg1: #e9f6ff;
+  --bg2: #cfe9fb;
+  --card-bg: rgba(255,255,255,0.85);
+  --card-border: #bfe0f6;
+  --text: #0b4f6c;
+  --muted: #467a92;
+  --accent: #2d99d3;
+  --accent-dark: #217db3;
+  --shadow: 0 8px 24px rgba(23, 90, 128, 0.12);
+  --radius: 10px;
+
+  /* Icy chart palette */
+  --c1:#3b9ad6; --c2:#7ec8e3; --c3:#9fd6ea; --c4:#bfe4f1;
+  --c5:#83bcd9; --c6:#58a7d0; --c7:#2b83b7; --c8:#1f6d9c;
+
+  --green:#43b37a; --red:#e06a6a;
+
+  /* Subject colors (one per subject) */
+  --mat: #f6b26b;   /* Mathematics - warm */
+  --sci: #6aa84f;   /* Science - green */
+  --his: #3d85c6;   /* History - blue */
+  --geo: #76a5af;   /* Geography - teal */
+  --civ: #8e7cc3;   /* Civics - purple */
+  --eco: #e06666;   /* Economics - red */
+  --er:  #6fa8dc;   /* English Reader - light blue */
+  --es:  #f9cb9c;   /* English Supp - peach */
+
+  /* keep chart palette in same order as subjects */
+  --c1: var(--mat); --c2: var(--sci); --c3: var(--his); --c4: var(--geo);
+  --c5: var(--civ); --c6: var(--eco); --c7: var(--er);  --c8: var(--es);
+}
+
+/* subject icon backgrounds */
+.summary-icon[data-subject="Mathematics"] { background: linear-gradient(180deg,var(--mat), #d99a58); color:#fff; border-color: rgba(0,0,0,0.06); }
+.summary-icon[data-subject="Science"]     { background: linear-gradient(180deg,var(--sci), #578e3f); color:#fff; border-color: rgba(0,0,0,0.06); }
+.summary-icon[data-subject="History"]     { background: linear-gradient(180deg,var(--his), #2f6fad); color:#fff; border-color: rgba(0,0,0,0.06); }
+.summary-icon[data-subject="Geography"]   { background: linear-gradient(180deg,var(--geo), #5f9b91); color:#fff; border-color: rgba(0,0,0,0.06); }
+.summary-icon[data-subject="Civics"]      { background: linear-gradient(180deg,var(--civ), #7a68b0); color:#fff; border-color: rgba(0,0,0,0.06); }
+.summary-icon[data-subject="Economics"]   { background: linear-gradient(180deg,var(--eco), #c25555); color:#fff; border-color: rgba(0,0,0,0.06); }
+.summary-icon[data-subject="Eng Reader"]  { background: linear-gradient(180deg,var(--er),  #5b9bd6); color:#fff; border-color: rgba(0,0,0,0.06); }
+.summary-icon[data-subject="Eng Supp"]    { background: linear-gradient(180deg,var(--es),  #e8b689); color:#fff; border-color: rgba(0,0,0,0.06); }
+
+/* Background and layout */
+body{
+  margin:0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--bg1), var(--bg2));
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative; /* added so pseudo-elements can be positioned */
+}
+
+.page{
+  position: relative;
+  z-index: 2; /* keep above mountain video and snow */
+  padding: 28px 18px 60px;
+  max-width: 980px;
+  margin: 0 auto;
+
+  /* Compact horizontal icon bar for collapsed subjects */
+  display: block;
+  --subject-compact-size: 56px;
+}
+
+/* default details behavior: expanded = full width, collapsed = compact tile */
+.page > details {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+}
+
+/* collapsed (compact) subjects: show as small icon tiles and line up horizontally */
+.page > details:not([open]) {
+  display: inline-flex;
+  width: var(--subject-compact-size);
+  height: var(--subject-compact-size);
+  margin: 6px 8px 6px 0;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  transition: width 160ms ease, height 160ms ease, transform 160ms ease;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04) inset;
+}
+
+/* make expanded subject full width */
+.page > details[open] {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+}
+
+/* summary layout for normal (expanded) and compact (collapsed) */
+.page > details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 10px 14px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+/* when compact, center only the icon and hide other summary elements */
+.page > details:not([open]) summary {
+  padding: 0;
+  width: var(--subject-compact-size);
+  height: var(--subject-compact-size);
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+/* hide title and counter when collapsed so only icon shows */
+.page > details:not([open]) .subject-title,
+.page > details:not([open]) .counter {
+  display: none;
+}
+
+/* enlarge icon in compact mode */
+.page > details:not([open]) .summary-icon {
+  font-size: 1.25rem;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* maintain accessible focus/hover states for compact tiles */
+.page > details:not([open]) summary:focus,
+.page > details:not([open]) summary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+/* Ensure the list inside expanded details behaves normally */
+.page > details ul {
+  margin: 8px 0 12px 24px;
+}
+
+/* wrap compact tiles to next line if needed */
+@media (max-width: 720px) {
+  .page > details:not([open]) {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+h1{
+  text-align: center;
+  margin: 0 0 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.subtitle{
+  text-align: center;
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Collapsible cards */
+details{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  margin: 12px 0;
+  padding: 10px 12px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+
+summary{
+  list-style: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+summary::-webkit-details-marker{ display:none; }
+
+.summary-icon{
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  background: #e4f3fb;
+  color: var(--accent);
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+}
+
+details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 10px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0; /* allow truncation */
+}
+
+.subject-title {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 160ms ease, width 160ms ease;
+}
+
+/* When details is collapsed, hide the subject title but keep icon + counter visible */
+details:not([open]) .subject-title {
+  display: none;
+  opacity: 0;
+  width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* make counter stand out and stay visible on the right */
+.counter {
+  font-weight: 600;
+  color: var(--muted);
+  margin-left: 0.75rem;
+  white-space: nowrap;
+}
+
+/* lightly reduce spacing for collapsed summaries (optional) */
+details:not([open]) summary {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* Chapters list */
+ul{
+  list-style: none;
+  padding-left: 4px;
+  margin: 10px 0 0;
+}
+li{ margin: 6px 0; }
+label{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.chapter-checkbox{
+  accent-color: var(--accent);
+  transform: translateY(1px);
+}
+
+/* Controls and chart cards */
+.controls{
+  display: flex;
+  justify-content: center;
+  margin: 22px 0 8px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#toggleChart{
+  padding: 10px 18px;
+  font-size: 0.98rem;
+  cursor: pointer;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow);
+  transition: background .2s ease, transform .05s ease;
+}
+#toggleChart:hover{ background: var(--accent-dark); }
+#toggleChart:active{ transform: translateY(1px); }
+
+.chart-card{
+  width: min(620px, 92vw);
+  margin: 16px auto 0;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+
+/* Background video (full-bleed, behind overlays) */
+.bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  z-index: 0;               /* behind snow-layer and content */
+  pointer-events: none;
+  filter: contrast(1.02) saturate(0.95) brightness(0.98);
+}
+
+/* Snow layer should sit above video but below page content */
+.snow-layer{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1; /* above video */
+  overflow: hidden;
+
+  /* use Unsplash to fetch an icy mountain photo; change query or replace URL with your own image if desired */
+  background-image:
+    linear-gradient(180deg, rgba(18,34,48,0.15), rgba(200,230,245,0.06)),
+    url("https://source.unsplash.com/1600x900/?snow,mountain,ice");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* subtle parallax on scroll */
+  filter: saturate(0.95) contrast(1.02) brightness(0.98);
+}
+
+/* subtle frosty overlay to push content forward */
+.snow-layer::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(220,240,250,0.04));
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+
+/* retain smaller visual ridge in front for depth */
+body::before{
+  content:'';
+  position: fixed;
+  left:-8%;
+  bottom: 0;
+  width: 116%;
+  height: 18vh;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(240,248,252,0.98));
+  clip-path: polygon(0 50%, 6% 34%, 14% 42%, 24% 30%, 34% 46%, 46% 28%, 56% 44%, 68% 30%, 78% 42%, 86% 32%, 100% 44%, 100% 100%, 0 100%);
+  opacity: 1;
+  filter: drop-shadow(0 16px 30px rgba(6,20,40,0.08));
+  transform: translate3d(0,0,0);
+  will-change: transform;
+  animation: parallaxFast 14s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Snowflake styling and improved animation (gentle drift + rotation) */
+.snowflake{
+  position: absolute;
+  top: -10px;
+  background: radial-gradient(circle, #fff 0 60%, rgba(255,255,255,0.85) 61% 100%);
+  border-radius: 50%;
+  opacity: var(--op, 0.85);
+  width: var(--size, 4px);
+  height: var(--size, 4px);
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.06));
+  animation: fall var(--dur, 16s) linear var(--delay, 0s) infinite;
+  transform: translateY(-10vh) translateX(0) rotate(0deg);
+  will-change: transform, opacity;
+}
+
+/* Slight blur for larger flakes to feel depth */
+.snowflake[style*="px;"] { /* no-op helper so larger sizes blend well */ }
+
+/* fall animation: move down, drift horizontally and rotate */
+@keyframes fall{
+  0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+  5%   { opacity: var(--op,0.85); }
+  50%  { transform: translateY(45vh) translateX(calc(var(--drift) / 2)) rotate(180deg); }
+  100% { transform: translateY(110vh) translateX(var(--drift)) rotate(360deg); opacity: 0.9; }
+}
+
+/* Parallax horizontal movement for mountain layers */
+@keyframes parallaxSlow{
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-6%); }
+  100% { transform: translateX(0); }
+}
+@keyframes parallaxMedium{
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-9%); }
+  100% { transform: translateX(0); }
+}
+@keyframes parallaxFast{
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-14%); }
+  100% { transform: translateX(0); }
+}
+
+#searchBox {
+  display: block;
+  margin: 0 auto 18px;
+  padding: 10px 14px;
+  width: min(320px, 90%);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow);
+}
+
+.counter {
+  font-weight: normal;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* add near summary / details styles (or at end) */
+
+/* fixed compact icon bar at bottom */
+.compact-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+  z-index: 3;
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  background: rgba(10,18,28,0.06);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(6,18,36,0.12);
+  backdrop-filter: blur(6px) saturate(1.05);
+  align-items: center;
+}
+
+/* each compact button: icon tile, small badge for completed chapters */
+.compact-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.06);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: transform .14s ease, box-shadow .14s ease;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.compact-btn:focus,
+.compact-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 22px rgba(6,18,36,0.12); outline: none; }
+
+/* bigger icon inside compact button */
+.compact-btn .summary-icon {
+  font-size: 1.25rem;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* small badge (top-right) showing done/total */
+.compact-btn .badge {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  background: rgba(10,120,180,0.95);
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(6,18,36,0.18);
+}
+
+/* main content sits above compact bar */
+.expanded-area {
+  padding-bottom: 100px; /* leave space so expanded subjects don't hide under compact bar */
+}
+
+/* when a detail is collapsed it will not be shown as inline tile (we use compact buttons instead) */
+.page > details:not([open]) {
+  display: block;
+  width: 100%;
+  margin: 8px 0; /* keep space but hidden by compact buttons */
+}
+
+/* keep previous summary styling */
+details summary { display:flex; align-items:center; justify-content:space-between; gap:.6rem; padding:10px 14px; cursor:pointer; }
+
+/* --- Hide collapsed subject panels --- */
+/* Keep compact buttons in the bottom compact-bar; only show detail panels when they have the "open" attribute */
+.expanded-area > details {
+  display: none; /* hide all subjects by default until opened */
+}
+
+/* When a subject is opened it appears as a normal full-width card */
+.expanded-area > details[open] {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  transition: transform .12s ease, opacity .12s ease;
+  opacity: 1;
+}
+
+/* Make sure lists inside opened details behave as before */
+.expanded-area > details[open] ul {
+  margin: 8px 0 12px 24px;
+}
+
+/* keep room at bottom so expanded subjects don't sit under the compact bar */
+.expanded-area {
+  padding-bottom: 120px; /* adjust if your compact-bar height changes */
+}
+
+/* responsive: compact bar wraps */
+@media (max-width: 720px) {
+  .compact-bar { gap:8px; padding:6px; bottom:10px; }
+  .compact-btn{ width:48px; height:48px; }
+  .compact-btn .badge{ font-size:10px; padding:2px 5px; right:4px; top:4px; }
+}

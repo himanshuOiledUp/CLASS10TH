@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Class 10 NCERT Chapter Tracker</title>
+
+  <!-- Real-looking icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- custom subject icons -->
+  <style>
+    /* small inline map of custom icons before each subject */
+    .summary-icon {
+      display: inline-block;
+      width: 1.4em;
+      text-align: center;
+      margin-right: 0.5rem;
+      font-size: 1.1rem;
+      vertical-align: middle;
+    }
+    .summary-icon::before { display:inline-block; }
+
+    .summary-icon[data-subject="Mathematics"]::before { content: "📐"; }       /* Mathematics */
+    .summary-icon[data-subject="Science"]::before { content: "🔬"; }           /* Science */
+    .summary-icon[data-subject="History"]::before { content: "🏛️"; }          /* History */
+    .summary-icon[data-subject="Geography"]::before { content: "🌍"; }        /* Geography */
+    .summary-icon[data-subject="Civics"]::before { content: "⚖️"; }           /* Civics */
+    .summary-icon[data-subject="Economics"]::before { content: "📈"; }        /* Economics */
+    .summary-icon[data-subject="Eng Reader"]::before { content: "📖"; }       /* English – First Flight */
+    .summary-icon[data-subject="Eng Supp"]::before { content: "📚"; }         /* English – Footprints Without Feet */
+
+    /* fallback for any other subject */
+    .summary-icon:not([data-subject])::before { content: "•"; }
+  </style>
+
+  <!-- App logic -->
+  <script defer src="app.js"></script>
+</head>
+
+<body>
+  <!-- Background video (local file) -->
+  <video id="bgVideo" class="bg-video" autoplay muted loop playsinline aria-hidden="true">
+    <source src="file:///C:/Users/HIMANSHU/Downloads/snowy-mountain.1920x1080.mp4" type="video/mp4">
+  </video>
+
+  <!-- Snow overlay (keeps snowflakes on top of video) -->
+  <div class="snow-layer" id="snow" aria-hidden="true"></div>
+
+  <div class="page">
+    <h1><i class="fa-regular fa-snowflake" aria-hidden="true"></i> Class 10 NCERT Chapter Tracker</h1>
+    <div class="subtitle">Track chapters, toggle charts, and watch your progress glide forward.</div>
+
+    <div class="search-row">
+      <input type="text" id="searchBox" placeholder="Search chapters" aria-label="Search chapters" />
+    </div>
+
+    <!-- compact icon bar (minimized subjects live here as buttons) -->
+    <div id="compactBar" class="compact-bar" aria-hidden="false"></div>
+
+    <!-- expanded area: details remain here and expand below the compact bar -->
+    <div id="expandedArea" class="expanded-area">
+      <!-- subjects: all details are now collapsed by default (no 'open' attributes) -->
+      <!-- Mathematics -->
+      <details>
+        <summary>
+          <div class="summary-left">
+            <span class="summary-icon" data-subject="Mathematics" aria-hidden="true"></span>
+            <span class="subject-title">Mathematics</span>
+          </div>
+          <span class="counter" data-subject="Mathematics">(0 / 15)</span>
+        </summary>
+        <ul>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Real Numbers</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Polynomials</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Pair of Linear Equations in Two Variables</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Quadratic Equations</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Arithmetic Progressions</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Triangles</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Coordinate Geometry</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Introduction to Trigonometry</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Applications of Trigonometry</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Circles</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Constructions</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Areas Related to Circles</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Surface Areas and Volumes</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Statistics</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Mathematics"> Probability</label></li>
+        </ul>
+      </details>
+
+      <!-- Science -->
+      <details>
+        <summary>
+          <div class="summary-left">
+            <span class="summary-icon" data-subject="Science" aria-hidden="true"></span>
+            <span class="subject-title">Science</span>
+          </div>
+          <span class="counter" data-subject="Science">(0 / 14)</span>
+        </summary>
+        <ul>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Chemical Reactions and Equations</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Acids, Bases and Salts</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Metals and Non-Metals</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Carbon and Its Compounds</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Life Processes</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Control and Coordination</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> How Do Organisms Reproduce?</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Heredity and Evolution</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Light – Reflection and Refraction</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> The Human Eye and the Colourful World</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Electricity</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Magnetic Effects of Electric Current</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Our Environment</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Science"> Management of Natural Resources</label></li>
+        </ul>
+      </details>
+
+      <!-- History -->
+      <details>
+        <summary>
+          <div class="summary-left">
+            <span class="summary-icon" data-subject="History" aria-hidden="true"></span>
+            <span class="subject-title">History</span>
+          </div>
+          <span class="counter" data-subject="History">(0 / 5)</span>
+        </summary>
+        <ul>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="History"> The Rise of Nationalism in Europe</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="History"> Nationalism in India</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="History"> The Making of a Global World</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="History"> The Age of Industrialisation</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="History"> Print Culture and the Modern World</label></li>
+        </ul>
+      </details>
+
+      <!-- Geography -->
+      <details>
+        <summary>
+          <div class="summary-left">
+            <span class="summary-icon" data-subject="Geography" aria-hidden="true"></span>
+            <span class="subject-title">Geography</span>
+          </div>
+          <span class="counter" data-subject="Geography">(0 / 7)</span>
+        </summary>
+        <ul>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Geography"> Resources and Development</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Geography"> Forest and Wildlife Resources</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Geography"> Water Resources</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Geography"> Agriculture</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Geography"> Minerals and Energy Resources</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Geography"> Manufacturing Industries</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Geography"> Lifelines of National Economy</label></li>
+        </ul>
+      </details>
+
+      <!-- Civics -->
+      <details>
+        <summary>
+          <div class="summary-left">
+            <span class="summary-icon" data-subject="Civics" aria-hidden="true"></span>
+            <span class="subject-title">Civics</span>
+          </div>
+          <span class="counter" data-subject="Civics">(0 / 5)</span>
+        </summary>
+        <ul>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Civics"> Power Sharing</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Civics"> Federalism</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Civics"> Gender, Religion and Caste</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Civics"> Political Parties</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Civics"> Outcomes of Democracy</label></li>
+        </ul>
+      </details>
+
+      <!-- Economics -->
+      <details>
+        <summary>
+          <div class="summary-left">
+            <span class="summary-icon" data-subject="Economics" aria-hidden="true"></span>
+            <span class="subject-title">Economics</span>
+          </div>
+          <span class="counter" data-subject="Economics">(0 / 5)</span>
+        </summary>
+        <ul>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Economics"> Development</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Economics"> Sectors of the Indian Economy</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Economics"> Money and Credit</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Economics"> Globalisation and the Indian Economy</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Economics"> Consumer Rights</label></li>
+        </ul>
+      </details>
+
+      <!-- English Reader -->
+      <details>
+        <summary>
+          <div class="summary-left">
+            <span class="summary-icon" data-subject="Eng Reader" aria-hidden="true"></span>
+            <span class="subject-title">English – First Flight</span>
+          </div>
+          <span class="counter" data-subject="Eng Reader">(0 / 9)</span>
+        </summary>
+        <ul>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> A Letter to God</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> Nelson Mandela: Long Walk to Freedom</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> Two Stories About Flying</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> From the Diary of Anne Frank</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> Glimpses of India</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> Mijbil the Otter</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> Madam Rides the Bus</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> The Sermon at Benares</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Reader"> The Proposal</label></li>
+        </ul>
+      </details>
+
+      <!-- English Supplementary -->
+      <details>
+        <summary>
+          <div class="summary-left">
+            <span class="summary-icon" data-subject="Eng Supp" aria-hidden="true"></span>
+            <span class="subject-title">English – Footprints Without Feet</span>
+          </div>
+          <span class="counter" data-subject="Eng Supp">(0 / 9)</span>
+        </summary>
+        <ul>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> A Triumph of Surgery</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> The Thief’s Story</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> The Midnight Visitor</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> A Question of Trust</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> Footprints Without Feet</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> The Making of a Scientist</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> The Necklace</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> Bholi</label></li>
+          <li><label><input type="checkbox" class="chapter-checkbox" data-subject="Eng Supp"> The Book That Saved the Earth</label></li>
+        </ul>
+      </details>
+
+    </div> <!-- end expandedArea -->
+
+    <div class="controls">
+      <button id="toggleChart">Show Overall Progress</button>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-card" id="chart-container">
+      <canvas id="progressChart"></canvas>
+    </div>
+
+    <div class="chart-card" id="overall-chart-container" style="display:none;">
+      <canvas id="overallChart"></canvas>
+    </div>
+  </div>
+</body>
+</html>
